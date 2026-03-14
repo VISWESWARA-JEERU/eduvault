@@ -1,14 +1,12 @@
-
 import { useEffect, useState } from "react";
 import API from "../../api/axios";
+import "./Admin.css";
 
 function BranchManager() {
-
   const [branches, setBranches] = useState([]);
   const [branchName, setBranchName] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Fetch branches
   const fetchBranches = async () => {
     try {
       const res = await API.get("/branches");
@@ -23,9 +21,7 @@ function BranchManager() {
     fetchBranches();
   }, []);
 
-  // Add branch
   const addBranch = async () => {
-
     if (!branchName.trim()) {
       alert("Branch name cannot be empty ❌");
       return;
@@ -40,7 +36,6 @@ function BranchManager() {
 
       setBranchName("");
       fetchBranches();
-
     } catch (err) {
       console.error("Error adding branch:", err);
       alert("Failed to add branch ❌");
@@ -49,7 +44,6 @@ function BranchManager() {
     }
   };
 
-  // Delete branch
   const deleteBranch = async (id) => {
     try {
       await API.delete(`/branches/${id}`);
@@ -61,42 +55,47 @@ function BranchManager() {
   };
 
   return (
-    <div>
+    <div className="admin-page">
+      <div className="admin-shell">
+        <div className="admin-card">
+          <h3>Branch management</h3>
+          <p className="admin-section-title">
+            Create and maintain academic branches.
+          </p>
 
-      <h2>Branch Management</h2>
-
-      {/* Add Branch */}
-      <div>
-        <input
-          type="text"
-          placeholder="Enter Branch Name"
-          value={branchName}
-          onChange={(e) => setBranchName(e.target.value)}
-        />
-
-        <button onClick={addBranch} disabled={loading}>
-          {loading ? "Adding..." : "Add Branch"}
-        </button>
-      </div>
-
-      {/* Branch List */}
-      <ul>
-        {branches.map((branch) => (
-          <li key={branch.id}>
-
-            {branch.branch_name}
+          <div className="admin-input-row">
+            <input
+              className="admin-input"
+              type="text"
+              placeholder="Enter branch name"
+              value={branchName}
+              onChange={(e) => setBranchName(e.target.value)}
+            />
 
             <button
-              onClick={() => deleteBranch(branch.id)}
-              style={{ marginLeft: "10px" }}
+              className="admin-primary-btn"
+              onClick={addBranch}
+              disabled={loading}
             >
-              Delete
+              {loading ? "Adding..." : "Add branch"}
             </button>
+          </div>
 
-          </li>
-        ))}
-      </ul>
-
+          <ul className="admin-list" style={{ marginTop: 14 }}>
+            {branches.map((branch) => (
+              <li key={branch.id}>
+                <span>{branch.branch_name}</span>
+                <button
+                  className="admin-delete-btn"
+                  onClick={() => deleteBranch(branch.id)}
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

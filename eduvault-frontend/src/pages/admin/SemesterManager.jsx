@@ -1,25 +1,19 @@
-
 import { useEffect, useState } from "react";
 import API from "../../api/axios";
+import "./Admin.css";
 
 function SemesterManager() {
-
   const [semesters, setSemesters] = useState([]);
   const [years, setYears] = useState([]);
   const [semesterName, setSemesterName] = useState("");
   const [yearId, setYearId] = useState("");
 
-  // Fetch semesters + years
   const fetchData = async () => {
     try {
       const sem = await API.get("/semesters");
       const yr = await API.get("/years");
-       console.log(sem.data);
       setSemesters(sem.data);
-       console.log(yr.data);
       setYears(yr.data);
-     
-
     } catch (err) {
       console.error("Error fetching data:", err);
     }
@@ -29,9 +23,7 @@ function SemesterManager() {
     fetchData();
   }, []);
 
-  // Add semester
   const handleAdd = async () => {
-
     if (!semesterName.trim()) {
       alert("Enter semester name ❌");
       return;
@@ -43,23 +35,20 @@ function SemesterManager() {
     }
 
     try {
-
       await API.post("/semesters", {
         semester_name: semesterName,
-        year_id: Number(yearId)
+        year_id: Number(yearId),
       });
 
       setSemesterName("");
       setYearId("");
       fetchData();
-
     } catch (err) {
       console.error("Error adding semester:", err);
       alert("Failed to add semester ❌");
     }
   };
 
-  // Delete semester
   const handleDelete = async (id) => {
     try {
       await API.delete(`/semesters/${id}`);
@@ -70,58 +59,61 @@ function SemesterManager() {
   };
 
   return (
-    <div>
+    <div className="admin-page">
+      <div className="admin-shell">
+        <div className="admin-card">
+          <h3>Semester manager</h3>
+          <p className="admin-section-title">
+            Connect semesters to their academic years.
+          </p>
 
-      <h3>Semester Manager</h3>
+          <div className="admin-input-row">
+            <input
+              className="admin-input"
+              type="text"
+              placeholder="Semester name"
+              value={semesterName}
+              onChange={(e) => setSemesterName(e.target.value)}
+            />
 
-      {/* Semester Input */}
-      <input
-        type="text"
-        placeholder="Semester Name"
-        value={semesterName}
-        onChange={(e) => setSemesterName(e.target.value)}
-      />
-
-      {/* Year Dropdown */}
-      <select
-        value={yearId}
-        onChange={(e) => setYearId(e.target.value)}
-      >
-
-        <option value="">Select Year</option>
-
-        {years.map((year) => (
-          <option key={year.id} value={year.id}>
-            {year.year_name} ({year.branch_name})
-          </option>
-        ))}
-
-      </select>
-
-      <button onClick={handleAdd}>Add Semester</button>
-
-      {/* Semester List */}
-      <ul>
-
-        {semesters.map((semester) => (
-          <li key={semester.id}>
-
-            {semester.semester_name}
-            {" "}
-            (Year: {semester.year_name} - {semester.branch_name})
-
-            <button
-              onClick={() => handleDelete(semester.id)}
-              style={{ marginLeft: "10px" }}
+            <select
+              className="admin-select"
+              value={yearId}
+              onChange={(e) => setYearId(e.target.value)}
             >
-              Delete
+              <option value="">Select year</option>
+              {years.map((year) => (
+                <option key={year.id} value={year.id}>
+                  {year.year_name} ({year.branch_name})
+                </option>
+              ))}
+            </select>
+
+            <button className="admin-primary-btn" onClick={handleAdd}>
+              Add semester
             </button>
+          </div>
 
-          </li>
-        ))}
-
-      </ul>
-
+          <ul className="admin-list" style={{ marginTop: 14 }}>
+            {semesters.map((semester) => (
+              <li key={semester.id}>
+                <span>
+                  {semester.semester_name}{" "}
+                  <span className="admin-tag">
+                    Year: {semester.year_name} - {semester.branch_name}
+                  </span>
+                </span>
+                <button
+                  className="admin-delete-btn"
+                  onClick={() => handleDelete(semester.id)}
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

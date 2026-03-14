@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
+import "./Register.css";
 
 function Register() {
   const navigate = useNavigate();
@@ -17,50 +18,79 @@ function Register() {
         name,
         email,
         password,
-        role: "user"
+        role: "user",
       });
 
       alert("Registered successfully ✅");
       navigate("/login");
-
     } catch (err) {
       alert("User already exists ❌");
     }
   };
 
   return (
-    <form onSubmit={handleRegister} style={{ textAlign: "center", marginTop: "100px" }}>
-      <h2>Register</h2>
-       
-      <input
-        type="text"
-        placeholder="Enter Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
-      <br /><br />
+    <div className="register-page">
+      <div className="register-card">
+        <h1 className="register-title">Create your EduVault account</h1>
+        <p className="register-subtitle">
+          Join the platform to organize and access your study resources in one
+          colorful place.
+        </p>
 
-      <input
-        type="email"
-        placeholder="Enter Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <br /><br />
+        <form className="register-form" onSubmit={handleRegister}>
+          <div className="register-field">
+            <label htmlFor="name">Full name</label>
+            <input
+              id="name"
+              type="text"
+              placeholder="Enter your full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
 
-      <input
-        type="password"
-        placeholder="Enter Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      <br /><br />
+          <div className="register-field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="name@college.edu"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-      <button type="submit">Register</button>
-    </form>
+          <div className="register-field">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Create a strong password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button type="submit" className="register-button">
+            Register
+          </button>
+        </form>
+
+        <p className="register-footer">
+          Already have an account?{" "}
+          <button
+            type="button"
+            className="register-link-button"
+            onClick={() => navigate("/login")}
+          >
+            Log in
+          </button>
+        </p>
+      </div>
+    </div>
   );
 }
 

@@ -3,7 +3,7 @@ const db = require("../config/db");
 
 /*
 ========================================
-✅ Get All Subjects (with Semester Name)
+✅ Get All Subjects (with Semester, Year, Branch)
 ========================================
 */
 exports.getAllSubjects = (req, res) => {
@@ -12,10 +12,14 @@ exports.getAllSubjects = (req, res) => {
         SELECT 
             subjects.id,
             subjects.subject_name,
-            semesters.semester_name
+            semesters.semester_name,
+            years.year_name,
+            branches.branch_name
         FROM subjects
         JOIN semesters ON subjects.semester_id = semesters.id
-        ORDER BY semesters.id, subjects.id
+        JOIN years ON semesters.year_id = years.id
+        JOIN branches ON years.branch_id = branches.id
+        ORDER BY branches.id, years.id, semesters.id, subjects.id
     `;
 
     db.query(sql, (err, result) => {

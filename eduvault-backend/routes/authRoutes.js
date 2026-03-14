@@ -9,6 +9,10 @@ router.post("/login", authController.login);
 // Public user registration
 router.post("/register", authController.register);
 
+// Forgot / reset password
+router.post("/forgot-password", authController.forgotPassword);
+router.post("/reset-password", authController.resetPassword);
+
 router.post(
   "/register-admin",
   verifyToken,

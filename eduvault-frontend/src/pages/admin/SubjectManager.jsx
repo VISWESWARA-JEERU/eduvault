@@ -1,13 +1,13 @@
-
 import { useEffect, useState } from "react";
 import API from "../../api/axios";
+import "./Admin.css";
 
 function SubjectManager() {
-
   const [subjects, setSubjects] = useState([]);
   const [semesters, setSemesters] = useState([]);
   const [subjectName, setSubjectName] = useState("");
   const [semesterId, setSemesterId] = useState("");
+  const [error, setError] = useState("");
 
   const fetchData = async () => {
     try {
@@ -26,31 +26,32 @@ function SubjectManager() {
   }, []);
 
   const handleAdd = async () => {
-
     if (!subjectName.trim()) {
-      alert("Enter subject name ❌");
+      setError("Enter subject name ❌");
       return;
     }
 
     if (!semesterId) {
-      alert("Select semester ❌");
+      setError("Select semester ❌");
       return;
     }
 
     try {
+      setError("");
 
       await API.post("/subjects", {
         subject_name: subjectName,
-        semester_id: semesterId
+        semester_name: semesterId,
       });
 
       setSubjectName("");
       setSemesterId("");
       fetchData();
-
     } catch (err) {
       console.error("Error adding subject:", err);
-      alert("Failed to add subject ❌");
+      setError(
+        err.response?.data?.message || "Failed to add subject ❌"
+      );
     }
   };
 
@@ -64,57 +65,67 @@ function SubjectManager() {
   };
 
   return (
-    <div>
+    <div className="admin-page">
+      <div className="admin-shell">
+        <div className="admin-card">
+          <h3>Subject manager</h3>
+          <p className="admin-section-title">
+            Add and manage subjects under each semester.
+          </p>
 
-      <h3>Subject Manager</h3>
+          {error && <p className="admin-error-text">{error}</p>}
 
-      {/* Subject Name Input */}
-      <input
-        type="text"
-        placeholder="Subject Name"
-        value={subjectName}
-        onChange={(e) => setSubjectName(e.target.value)}
-      />
+          <div className="admin-input-row">
+            <input
+              className="admin-input"
+              type="text"
+              placeholder="Subject name"
+              value={subjectName}
+              onChange={(e) => setSubjectName(e.target.value)}
+            />
 
-      {/* Semester Dropdown */}
-      <select
-        value={semesterId}
-        onChange={(e) => setSemesterId(e.target.value)}
-      >
-        <option value="">Select Semester</option>
-
-        {semesters.map((s) => (
-          <option key={s.id} value={s.id}>
-            {s.semester_name}
-          </option>
-        ))}
-
-      </select>
-
-      <button onClick={handleAdd}>Add Subject</button>
-
-      {/* Subject List */}
-      <ul>
-
-        {subjects.map((s) => (
-          <li key={s.id}>
-
-            {s.subject_name}
-            {" "}
-            (Semester: {s.semester_name})
-
-            <button
-              onClick={() => handleDelete(s.id)}
-              style={{ marginLeft: "10px" }}
+            <select
+              className="admin-select"
+              value={semesterId}
+              onChange={(e) => setSemesterId(e.target.value)}
             >
-              Delete
+              <option value="">Select semester</option>
+              {semesters.map((s) => (
+                <option key={s.id} value={s.semester_name}>
+                  {s.semester_name}
+                  {s.branch_name ? ` - ${s.branch_name}` : ""}
+                  {s.year_name ? ` (${s.year_name})` : ""}
+                </option>
+              ))}
+            </select>
+
+            <button className="admin-primary-btn" onClick={handleAdd}>
+              Add subject
             </button>
+          </div>
 
-          </li>
-        ))}
-
-      </ul>
-
+          <ul className="admin-list" style={{ marginTop: 14 }}>
+            {subjects.map((s) => (
+              <li key={s.id}>
+                <span>
+                  {s.subject_name}{" "}
+                  <span className="admin-tag">
+                    Semester: {s.semester_name}
+                    {s.branch_name ? ` - ${s.branch_name}` : ""}
+                    {s.year_name ? ` (${s.year_name})` : ""}
+                  </span>
+                </span>
+                <button
+                  className="admin-delete-btn"
+                  onClick={() => handleDelete(s.id)}
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

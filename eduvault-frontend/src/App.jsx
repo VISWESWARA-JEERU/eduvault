@@ -5,6 +5,8 @@ import CreateAdmin from "./pages/CreateAdmin";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import BranchManager from "./pages/admin/BranchManager";
 import YearManager from "./pages/admin/YearManager";
@@ -19,6 +21,8 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       <Route
         path="/admin"

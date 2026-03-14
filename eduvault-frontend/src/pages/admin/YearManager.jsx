@@ -1,15 +1,13 @@
-
 import { useEffect, useState } from "react";
 import API from "../../api/axios";
+import "./Admin.css";
 
 function YearManager() {
-
   const [years, setYears] = useState([]);
   const [yearName, setYearName] = useState("");
   const [branches, setBranches] = useState([]);
   const [branchName, setBranchName] = useState("");
 
-  // Fetch years
   const fetchYears = async () => {
     try {
       const res = await API.get("/years");
@@ -19,7 +17,6 @@ function YearManager() {
     }
   };
 
-  // Fetch branches
   const fetchBranches = async () => {
     try {
       const res = await API.get("/branches");
@@ -34,9 +31,7 @@ function YearManager() {
     fetchBranches();
   }, []);
 
-  // Add year
   const handleAdd = async () => {
-
     if (!yearName.trim()) {
       return alert("Enter year name ❌");
     }
@@ -46,23 +41,20 @@ function YearManager() {
     }
 
     try {
-
       await API.post("/years", {
         year_name: yearName,
-        branch_name: branchName
+        branch_name: branchName,
       });
 
       setYearName("");
       setBranchName("");
       fetchYears();
-
     } catch (err) {
       console.error("Error adding year:", err);
       alert("Failed to add year ❌");
     }
   };
 
-  // Delete year
   const handleDelete = async (id) => {
     try {
       await API.delete(`/years/${id}`);
@@ -73,57 +65,59 @@ function YearManager() {
   };
 
   return (
-    <div>
+    <div className="admin-page">
+      <div className="admin-shell">
+        <div className="admin-card">
+          <h3>Year manager</h3>
+          <p className="admin-section-title">
+            Link academic years to their corresponding branches.
+          </p>
 
-      <h3>Year Manager</h3>
-
-      {/* Branch Dropdown */}
-      <select
-        value={branchName}
-        onChange={(e) => setBranchName(e.target.value)}
-      >
-        <option value="">Select Branch</option>
-
-        {branches.map((branch) => (
-          <option key={branch.id} value={branch.branch_name}>
-            {branch.branch_name}
-          </option>
-        ))}
-
-      </select>
-
-      {/* Year Input */}
-      <input
-        type="text"
-        placeholder="Year Name"
-        value={yearName}
-        onChange={(e) => setYearName(e.target.value)}
-      />
-
-      <button onClick={handleAdd}>Add Year</button>
-
-      {/* Year List */}
-      <ul>
-
-        {years.map((year) => (
-          <li key={year.id}>
-
-            {year.year_name} 
-            {" "}
-            (Branch: {year.branch_name})
-
-            <button
-              onClick={() => handleDelete(year.id)}
-              style={{ marginLeft: "10px" }}
+          <div className="admin-input-row">
+            <select
+              className="admin-select"
+              value={branchName}
+              onChange={(e) => setBranchName(e.target.value)}
             >
-              Delete
+              <option value="">Select branch</option>
+              {branches.map((branch) => (
+                <option key={branch.id} value={branch.branch_name}>
+                  {branch.branch_name}
+                </option>
+              ))}
+            </select>
+
+            <input
+              className="admin-input"
+              type="text"
+              placeholder="Year name"
+              value={yearName}
+              onChange={(e) => setYearName(e.target.value)}
+            />
+
+            <button className="admin-primary-btn" onClick={handleAdd}>
+              Add year
             </button>
+          </div>
 
-          </li>
-        ))}
-
-      </ul>
-
+          <ul className="admin-list" style={{ marginTop: 14 }}>
+            {years.map((year) => (
+              <li key={year.id}>
+                <span>
+                  {year.year_name}{" "}
+                  <span className="admin-tag">Branch: {year.branch_name}</span>
+                </span>
+                <button
+                  className="admin-delete-btn"
+                  onClick={() => handleDelete(year.id)}
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

@@ -3,7 +3,7 @@ const db = require("../config/db");
 
 /*
 ========================================
-✅ Get All PDFs (with Unit Name)
+✅ Get All PDFs (with Unit, Subject, Semester, Year, Branch)
 ========================================
 */
 exports.getAllPdfs = (req, res) => {
@@ -15,10 +15,18 @@ exports.getAllPdfs = (req, res) => {
             pdfs.file_path,
             pdfs.download_count,
             pdfs.uploaded_at,
-            units.unit_name
+            units.unit_name,
+            subjects.subject_name,
+            semesters.semester_name,
+            years.year_name,
+            branches.branch_name
         FROM pdfs
         JOIN units ON pdfs.unit_id = units.id
-        ORDER BY pdfs.id
+        JOIN subjects ON units.subject_id = subjects.id
+        JOIN semesters ON subjects.semester_id = semesters.id
+        JOIN years ON semesters.year_id = years.id
+        JOIN branches ON years.branch_id = branches.id
+        ORDER BY branches.id, years.id, semesters.id, subjects.id, units.id, pdfs.id
     `;
 
     db.query(sql, (err, result) => {

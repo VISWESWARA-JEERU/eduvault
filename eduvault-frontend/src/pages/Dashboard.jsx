@@ -20,6 +20,8 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const totalPdfs = pdfs.length;
+
   // Load branches
   useEffect(() => {
     fetchBranches();
@@ -194,40 +196,69 @@ const fetchSemesters = async (yearId) => {
     }
   };
 
+  const currentContextLabel = [
+    selectedBranch &&
+      branches.find((b) => String(b.id) === String(selectedBranch))?.branch_name,
+    selectedYear &&
+      years.find((y) => String(y.id) === String(selectedYear))?.year_name,
+    selectedSemester &&
+      semesters.find((s) => String(s.id) === String(selectedSemester))
+        ?.semester_name,
+    selectedSubject &&
+      subjects.find((s) => String(s.id) === String(selectedSubject))
+        ?.subject_name,
+    selectedUnit &&
+      units.find((u) => String(u.id) === String(selectedUnit))?.unit_name,
+  ]
+    .filter(Boolean)
+    .join(" • ");
+
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <h1>📚 EduVault Student Dashboard</h1>
-        <p>Select branch → year → semester → subject → unit</p>
-      </div>
-
-      {error && <div className="error-message">{error}</div>}
-
-      <div className="selectors-container">
-
-        {/* Branch */}
-        <div className="selector-group">
-          <label>Branch</label>
-          <select
-            value={selectedBranch}
-            onChange={(e) => setSelectedBranch(e.target.value)}
-          >
-            <option value="">Select Branch</option>
-            {branches.map((b) => (
-              <option key={b.id} value={b.id}>
-                {b.branch_name}
-              </option>
-            ))}
-          </select>
+    <div className="dashboard-page">
+      <div className="dashboard-shell">
+        <div className="dashboard-header">
+          <div>
+            <h1>📚 EduVault learning space</h1>
+            <p>Select branch → year → semester → subject → unit to explore PDFs.</p>
+          </div>
+          <div className="dashboard-stats">
+            <div className="stat-card">
+              <span className="stat-label">Available PDFs</span>
+              <span className="stat-value">{totalPdfs}</span>
+            </div>
+            <div className="stat-card">
+              <span className="stat-label">Units loaded</span>
+              <span className="stat-value">{units.length}</span>
+            </div>
+          </div>
         </div>
 
-        {/* Year */}
-        {selectedBranch && (
+        {error && <div className="error-message">{error}</div>}
+
+        <div className="selectors-container">
+          {/* Branch */}
+          <div className="selector-group">
+            <label>Branch</label>
+            <select
+              value={selectedBranch}
+              onChange={(e) => setSelectedBranch(e.target.value)}
+            >
+              <option value="">Select Branch</option>
+              {branches.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.branch_name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Year */}
           <div className="selector-group">
             <label>Year</label>
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
+              disabled={!selectedBranch}
             >
               <option value="">Select Year</option>
               {years.map((y) => (
@@ -237,15 +268,14 @@ const fetchSemesters = async (yearId) => {
               ))}
             </select>
           </div>
-        )}
 
-        {/* Semester */}
-        {selectedYear && (
+          {/* Semester */}
           <div className="selector-group">
             <label>Semester</label>
             <select
               value={selectedSemester}
               onChange={(e) => setSelectedSemester(e.target.value)}
+              disabled={!selectedYear}
             >
               <option value="">Select Semester</option>
               {semesters.map((s) => (
@@ -255,15 +285,14 @@ const fetchSemesters = async (yearId) => {
               ))}
             </select>
           </div>
-        )}
 
-        {/* Subject */}
-        {selectedSemester && (
+          {/* Subject */}
           <div className="selector-group">
             <label>Subject</label>
             <select
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value)}
+              disabled={!selectedSemester}
             >
               <option value="">Select Subject</option>
               {subjects.map((s) => (
@@ -273,15 +302,14 @@ const fetchSemesters = async (yearId) => {
               ))}
             </select>
           </div>
-        )}
 
-        {/* Unit */}
-        {selectedSubject && (
+          {/* Unit */}
           <div className="selector-group">
             <label>Unit</label>
             <select
               value={selectedUnit}
               onChange={(e) => setSelectedUnit(e.target.value)}
+              disabled={!selectedSubject}
             >
               <option value="">Select Unit</option>
               {units.map((u) => (
@@ -291,28 +319,43 @@ const fetchSemesters = async (yearId) => {
               ))}
             </select>
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* PDF LIST */}
-      {selectedUnit && (
+        {currentContextLabel && (
+          <div className="dashboard-context-card">
+            <span className="context-label">Currently viewing</span>
+            <span className="context-value">{currentContextLabel}</span>
+          </div>
+        )}
+
+        {/* PDF LIST */}
         <div className="pdfs-container">
           <h2>📄 PDFs</h2>
 
-          {loading && <p>Loading PDFs...</p>}
-
-          {!loading && pdfs.length === 0 && (
-            <p>No PDFs available for this unit.</p>
+          {selectedUnit === "" && (
+            <p className="no-pdfs">
+              Choose a branch, year, semester, subject, and unit to see PDFs.
+            </p>
           )}
 
-          {!loading && pdfs.length > 0 && (
+          {selectedUnit !== "" && loading && (
+            <p className="loading">Loading PDFs...</p>
+          )}
+
+          {selectedUnit !== "" && !loading && pdfs.length === 0 && (
+            <p className="no-pdfs">No PDFs available for this unit.</p>
+          )}
+
+          {selectedUnit !== "" && !loading && pdfs.length > 0 && (
             <div className="pdf-list">
               {pdfs.map((pdf) => (
                 <div key={pdf.id} className="pdf-card">
-                  <h3>{pdf.title}</h3>
-
-                  <p>Downloads: {pdf.download_count || 0}</p>
-
+                  <div className="pdf-info">
+                    <h3>{pdf.title}</h3>
+                    <p className="pdf-meta">
+                      Downloads: {pdf.download_count || 0}
+                    </p>
+                  </div>
                   <button
                     className="download-btn"
                     onClick={() => downloadPdf(pdf.id, pdf.title)}
@@ -324,7 +367,7 @@ const fetchSemesters = async (yearId) => {
             </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
