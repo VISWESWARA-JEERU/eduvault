@@ -1,18 +1,13 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import "./Login.css";
 
-function useQuery() {
-  const location = useLocation();
-  return new URLSearchParams(location.search);
-}
-
 function ResetPassword() {
   const navigate = useNavigate();
-  const query = useQuery();
-  const token = query.get("token") || "";
 
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -22,8 +17,8 @@ function ResetPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!token) {
-      setError("Invalid or missing reset token ❌");
+    if (!email || !otp) {
+      setError("Email and OTP are required ❌");
       return;
     }
 
@@ -38,7 +33,8 @@ function ResetPassword() {
       setMessage("");
 
       const { data } = await API.post("/reset-password", {
-        token,
+        email,
+        otp,
         newPassword: password,
       });
 
@@ -58,15 +54,40 @@ function ResetPassword() {
   return (
     <div className="login-page">
       <div className="login-card">
-        <h1 className="login-title">Set a new password</h1>
+        <h1 className="login-title">Reset your password</h1>
         <p className="login-subtitle">
-          Choose a strong password to secure your EduVault account.
+          Enter your email, the OTP sent to your email, and choose a new password.
         </p>
 
         {error && <p className="login-error">{error}</p>}
         {message && <p className="login-success">{message}</p>}
 
         <form className="login-form" onSubmit={handleSubmit}>
+          <div className="login-field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="name@college.edu"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="login-field">
+            <label htmlFor="otp">OTP</label>
+            <input
+              id="otp"
+              type="text"
+              placeholder="Enter 6-digit OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              required
+              maxLength="6"
+            />
+          </div>
+
           <div className="login-field">
             <label htmlFor="password">New password</label>
             <input

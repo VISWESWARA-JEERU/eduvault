@@ -23,6 +23,101 @@
   margin-bottom: 22px;
 }
 
+.hamburger-btn {
+  display: none;
+  border: none;
+  background: rgba(14, 165, 233, 0.1);
+  color: #0d3b60;
+  font-size: 1.3rem;
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.hamburger-btn:hover {
+  background: rgba(14, 165, 233, 0.2);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 880px) {
+  .hamburger-btn {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 880px) {
+  .dashboard-shell {
+    padding: 18px 16px 22px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .dashboard-header-right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .dashboard-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 560px) {
+  .dashboard-shell {
+    padding: 16px 12px 18px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .dashboard-header p {
+    font-size: 0.9rem;
+  }
+
+  .dashboard-stats {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .stat-card {
+    width: 50%;
+    justify-content: space-between;
+  }
+
+  .selectors-container {
+    flex-direction: column;
+  }
+
+  .selector-group {
+    width: 100%;
+  }
+
+  .pdf-list {
+    gap: 12px;
+  }
+
+  .pdf-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .download-btn {
+    width: 100%;
+  }
+}
+
+
 .dashboard-header h1 {
   margin: 0 0 6px;
   font-size: 2rem;
@@ -39,9 +134,35 @@
   color: #4b5563;
 }
 
+.dashboard-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
 .dashboard-stats {
   display: flex;
   gap: 12px;
+}
+
+.dashboard-logout-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.dashboard-logout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 11px 26px rgba(239, 68, 68, 0.5);
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
 }
 
 .stat-card {

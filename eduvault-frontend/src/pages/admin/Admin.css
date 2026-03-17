@@ -43,21 +43,22 @@
 }
 
 .admin-logout-btn {
-  padding: 8px 16px;
+  padding: 10px 18px;
   border-radius: 999px;
   border: none;
-  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  background: linear-gradient(135deg, #ef4444, #dc2626);
   color: #ffffff;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(185, 28, 28, 0.45);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
 .admin-logout-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 11px 26px rgba(185, 28, 28, 0.55);
+  transform: translateY(-2px);
+  box-shadow: 0 11px 26px rgba(239, 68, 68, 0.5);
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
 }
 
 .admin-grid {
@@ -107,20 +108,21 @@
 .admin-create-btn {
   margin-top: 6px;
   border-radius: 999px;
-  padding: 8px 14px;
+  padding: 10px 18px;
   border: none;
-  background: linear-gradient(135deg, #22c55e, #16a34a);
+  background: linear-gradient(135deg, #10b981, #059669);
   color: #ffffff;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
 .admin-create-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 26px rgba(34, 197, 94, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(16, 185, 129, 0.5);
+  background: linear-gradient(135deg, #059669, #047857);
 }
 
 .admin-list {
@@ -154,19 +156,21 @@
 
 .admin-delete-btn {
   border-radius: 999px;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border: none;
-  background: rgba(239, 68, 68, 0.08);
-  color: #b91c1c;
-  font-size: 0.8rem;
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  color: #ffffff;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.12s ease, transform 0.12s ease;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .admin-delete-btn:hover {
-  background: rgba(239, 68, 68, 0.16);
-  transform: translateY(-0.5px);
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
 }
 
 .admin-input-row {
@@ -263,6 +267,29 @@
   .admin-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+.hamburger-btn {
+  display: none;
+  border: none;
+  background: rgba(59, 130, 246, 0.12);
+  color: #0f172a;
+  font-size: 1.2rem;
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.hamburger-btn:hover {
+  background: rgba(59, 130, 246, 0.2);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 880px) {
+  .hamburger-btn {
+    display: inline-flex;
   }
 }
 

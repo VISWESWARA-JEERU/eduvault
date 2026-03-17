@@ -22,6 +22,7 @@ function Login() {
         localStorage.setItem("token", data.token);
         if (data.role) localStorage.setItem("role", data.role);
         if (data.name) localStorage.setItem("name", data.name);
+        if (data.id) localStorage.setItem("id", data.id);
       }
 
       const finalRole = data.role || role;

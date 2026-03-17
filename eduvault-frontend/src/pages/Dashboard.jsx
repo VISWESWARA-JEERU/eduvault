@@ -1,9 +1,13 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
+import DrawerMenu from "../components/DrawerMenu";
 import "./Dashboard.css";
 
 function Dashboard() {
+  const navigate = useNavigate();
+  const name = localStorage.getItem("name") || "Student";
   const [branches, setBranches] = useState([]);
   const [years, setYears] = useState([]);
   const [semesters, setSemesters] = useState([]);
@@ -20,7 +24,21 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   const totalPdfs = pdfs.length;
+
+  const branchRef = useRef(null);
+  const yearRef = useRef(null);
+  const semesterRef = useRef(null);
+  const subjectRef = useRef(null);
+  const unitRef = useRef(null);
+  const pdfRef = useRef(null);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
 
   // Load branches
   useEffect(() => {
@@ -38,6 +56,11 @@ function Dashboard() {
       setPdfs([]);
     }
   }, [selectedBranch]);
+
+  const scrollTo = (ref) => {
+    if (!ref?.current) return;
+    ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   // Year → Semesters
   useEffect(() => {
@@ -215,27 +238,55 @@ const fetchSemesters = async (yearId) => {
 
   return (
     <div className="dashboard-page">
+      <DrawerMenu
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        title="Navigation"
+        items={[
+          { label: "Branch", onClick: () => scrollTo(branchRef) },
+          { label: "Year", onClick: () => scrollTo(yearRef) },
+          { label: "Semester", onClick: () => scrollTo(semesterRef) },
+          { label: "Subject", onClick: () => scrollTo(subjectRef) },
+          { label: "Unit", onClick: () => scrollTo(unitRef) },
+          { label: "PDFs", onClick: () => scrollTo(pdfRef) },
+          { label: "Logout", onClick: handleLogout },
+        ]}
+      />
+
       <div className="dashboard-shell">
         <div className="dashboard-header">
+          <button
+            className="hamburger-btn"
+            type="button"
+            onClick={() => setDrawerOpen(true)}
+          >
+            ☰
+          </button>
+
           <div>
             <h1>📚 EduVault learning space</h1>
-            <p>Select branch → year → semester → subject → unit to explore PDFs.</p>
+            <p>Hi {name}! Select branch → year → semester → subject → unit to explore PDFs.</p>
           </div>
-          <div className="dashboard-stats">
-            <div className="stat-card">
-              <span className="stat-label">Available PDFs</span>
-              <span className="stat-value">{totalPdfs}</span>
+          <div className="dashboard-header-right">
+            <div className="dashboard-stats">
+              <div className="stat-card">
+                <span className="stat-label">Available PDFs</span>
+                <span className="stat-value">{totalPdfs}</span>
+              </div>
+              <div className="stat-card">
+                <span className="stat-label">Units loaded</span>
+                <span className="stat-value">{units.length}</span>
+              </div>
             </div>
-            <div className="stat-card">
-              <span className="stat-label">Units loaded</span>
-              <span className="stat-value">{units.length}</span>
-            </div>
+            <button className="dashboard-logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
         </div>
 
         {error && <div className="error-message">{error}</div>}
 
-        <div className="selectors-container">
+<div className="selectors-container" ref={branchRef}>
           {/* Branch */}
           <div className="selector-group">
             <label>Branch</label>
@@ -253,7 +304,7 @@ const fetchSemesters = async (yearId) => {
           </div>
 
           {/* Year */}
-          <div className="selector-group">
+          <div className="selector-group" ref={yearRef}>
             <label>Year</label>
             <select
               value={selectedYear}
@@ -270,7 +321,7 @@ const fetchSemesters = async (yearId) => {
           </div>
 
           {/* Semester */}
-          <div className="selector-group">
+          <div className="selector-group" ref={semesterRef}>
             <label>Semester</label>
             <select
               value={selectedSemester}
@@ -287,7 +338,7 @@ const fetchSemesters = async (yearId) => {
           </div>
 
           {/* Subject */}
-          <div className="selector-group">
+          <div className="selector-group" ref={subjectRef}>
             <label>Subject</label>
             <select
               value={selectedSubject}
@@ -304,7 +355,7 @@ const fetchSemesters = async (yearId) => {
           </div>
 
           {/* Unit */}
-          <div className="selector-group">
+          <div className="selector-group" ref={unitRef}>
             <label>Unit</label>
             <select
               value={selectedUnit}
@@ -322,7 +373,7 @@ const fetchSemesters = async (yearId) => {
         </div>
 
         {currentContextLabel && (
-          <div className="dashboard-context-card">
+          <div className="dashboard-context-card" ref={pdfRef}>
             <span className="context-label">Currently viewing</span>
             <span className="context-value">{currentContextLabel}</span>
           </div>

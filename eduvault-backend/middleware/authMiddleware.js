@@ -24,3 +24,11 @@ exports.isAdmin = (req, res, next) => {
   }
   next();
 };
+
+// SuperAdmin check: user id = 1 is the Super Admin
+exports.isSuperAdmin = (req, res, next) => {
+  if (req.user.id !== 1) {
+    return res.status(403).json({ message: "Access Denied. SuperAdmin Only." });
+  }
+  next();
+};

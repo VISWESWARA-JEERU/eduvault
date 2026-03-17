@@ -1,11 +1,14 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import "./CreateAdmin.css";
 
 function CreateAdmin() {
   const navigate = useNavigate();
+  const userRole = localStorage.getItem("role");
+  const userId = localStorage.getItem("id");
+  const isSuperAdmin = userId === "1";
 
   const [form, setForm] = useState({
     name: "",
@@ -13,6 +16,13 @@ function CreateAdmin() {
     password: "",
     role: "user",
   });
+
+  useEffect(() => {
+    // If regular admin, redirect to prevent admin creation
+    if (userRole !== "admin") {
+      navigate("/admin");
+    }
+  }, [userRole, navigate]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -45,25 +55,30 @@ function CreateAdmin() {
   return (
     <div className="create-admin-page">
       <div className="create-admin-card">
-        <h1 className="create-admin-title">Create a new account</h1>
+        <h1 className="create-admin-title">
+          {isSuperAdmin ? "Create a new account" : "Create a new student account"}
+        </h1>
         <p className="create-admin-subtitle">
-          Choose whether you want to create a student or admin account, then
-          fill in the details below.
+          {isSuperAdmin
+            ? "Choose whether you want to create a student or admin account, then fill in the details below."
+            : "Fill in the details below to create a student account."}
         </p>
 
         <div className="create-admin-form">
-          <div className="create-admin-field">
-            <label htmlFor="role">Role</label>
-            <select
-              id="role"
-              name="role"
-              value={form.role}
-              onChange={handleChange}
-            >
-              <option value="user">Student</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
+          {isSuperAdmin && (
+            <div className="create-admin-field">
+              <label htmlFor="role">Role</label>
+              <select
+                id="role"
+                name="role"
+                value={form.role}
+                onChange={handleChange}
+              >
+                <option value="user">Student</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          )}
 
           <div className="create-admin-field">
             <label htmlFor="name">Full name</label>

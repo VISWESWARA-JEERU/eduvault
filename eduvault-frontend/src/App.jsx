@@ -6,14 +6,14 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import BranchManager from "./pages/admin/BranchManager";
 import YearManager from "./pages/admin/YearManager";
 import SemesterManager from "./pages/admin/SemesterManager";
 import SubjectManager from "./pages/admin/SubjectManager";
 import UnitManager from "./pages/admin/UnitManager";
-import PdfManager from "./pages/admin/PdfManager"; 
+import PdfManager from "./pages/admin/PdfManager";
+import UserManager from "./pages/admin/UserManager"; 
 
 function App() {
   return (
@@ -22,7 +22,6 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
 
       <Route
         path="/admin"
@@ -38,6 +37,14 @@ function App() {
         element={
           <ProtectedRoute allowedRole="admin">
             <CreateAdmin />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <UserManager />
           </ProtectedRoute>
         }
       />
