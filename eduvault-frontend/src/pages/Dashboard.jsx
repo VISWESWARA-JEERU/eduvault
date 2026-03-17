@@ -264,7 +264,7 @@ const fetchSemesters = async (yearId) => {
           </button>
 
           <div>
-            <h1>📚 EduVault learning space</h1>
+            <h1>📚 EduVault learning space of JNTUA College of Engineering</h1>
             <p>Hi {name}! Select branch → year → semester → subject → unit to explore PDFs.</p>
           </div>
           <div className="dashboard-header-right">

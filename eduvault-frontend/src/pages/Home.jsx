@@ -11,7 +11,7 @@ function Home() {
         <h1 className="home-title">EduVault 📚</h1>
 
         <p className="home-subtitle">
-          A centralized academic hub where you can explore branch-wise,
+          A centralized academic hub of <b>JNTUA College of Engineering</b> where you can explore branch-wise,
           semester-wise, and subject-wise learning resources — all in one
           colorful place.
         </p>
